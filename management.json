@@ -1,0 +1,18 @@
+{
+  "Stuns": [
+    {
+      "Proto": "udp",
+      "URI": "stun://2.59.80.62:3478"
+    }
+  ],
+  "Signal": {
+    "Proto": "http",
+    "URI": "http://2.59.80.62:10000"
+  },
+  "Datadir": "/var/lib/netbird",
+  "HttpConfig": {
+    "Address": "0.0.0.0:33073",
+    "AuthIssuer": "http://dashboard:3000",
+    "AuthAudience": "http://dashboard:3000"
+  }
+}

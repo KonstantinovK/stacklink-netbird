@@ -1,42 +1,44 @@
 version: '3.8'
 services:
   management:
-    image: netbirdio/management:latest
+    image: netbirdio/management:${NETBIRD_MANAGEMENT_TAG}
     restart: unless-stopped
     environment:
-      - JWT_SECRET=525c6eacf89a639731b25c49c81dc60e76ee961f4db791c52c9ab01d1a85f3bf
-      - HTTP_AUTHORITY=stacklink.stackroom.ru
+      - JWT_SECRET=${JWT_SECRET}
     ports:
       - "33073:33073"
       - "33071:33071"
     volumes:
-      - management_data:/var/lib/netbird
+      - management_/var/lib/netbird
+      - ./management.json:/etc/netbird/management.json:ro
 
   signal:
-    image: netbirdio/signal:latest
+    image: netbirdio/signal:${NETBIRD_SIGNAL_TAG}
     restart: unless-stopped
     ports:
       - "10000:10000/udp"
 
   relay:
-    image: netbirdio/relay:latest
+    image: netbirdio/relay:${NETBIRD_RELAY_TAG}
     restart: unless-stopped
-    command: ["--port", "3478", "--exposed-ip", "2.59.80.62"]
+    environment:
+      - RELAY_ADDR=0.0.0.0:3478
+      - RELAY_EXPOSED_IP=2.59.80.62
     ports:
       - "3478:3478/udp"
 
   dashboard:
-    image: netbirdio/dashboard:latest
+    image: netbirdio/dashboard:${NETBIRD_DASHBOARD_TAG}
     restart: unless-stopped
     environment:
-      - NEXT_PUBLIC_MANAGEMENT_API_URL=https://stacklink.stackroom.ru:33073
+      - NEXT_PUBLIC_MANAGEMENT_API_URL=${NETBIRD_MGMT_API_ENDPOINT}
       - NEXT_PUBLIC_SIGNAL_API_URL=stacklink.stackroom.ru:10000
       - NEXT_PUBLIC_RELAY_API_URL=stacklink.stackroom.ru:3478
-      - AUTH_AUTHORITY=http://dashboard:3000
-      - AUTH0_DOMAIN=http://dashboard:3000
-      - AUTH0_CLIENT_ID=netbird-client
-      - AUTH0_CLIENT_SECRET=change-me-in-production
-      - AUTH0_AUDIENCE=http://dashboard:3000
+      - AUTH_AUTHORITY=${NETBIRD_AUTH_AUTHORITY}
+      - AUTH0_DOMAIN=${NETBIRD_AUTH_AUTHORITY}
+      - AUTH0_CLIENT_ID=${NETBIRD_AUTH_CLIENT_ID}
+      - AUTH0_CLIENT_SECRET=${NETBIRD_AUTH_CLIENT_SECRET}
+      - AUTH0_AUDIENCE=${NETBIRD_DASH_AUTH_AUDIENCE}
     ports:
       - "3000:3000"
     depends_on:
@@ -44,3 +46,4 @@ services:
 
 volumes:
   management_data:
+  
