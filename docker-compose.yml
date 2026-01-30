@@ -47,5 +47,4 @@ services:
       - management
 
 volumes:
-  management_
-  
+  management_data:
