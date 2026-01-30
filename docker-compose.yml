@@ -1,44 +1,44 @@
 version: '3.8'
 services:
   management:
-    image: netbirdio/management:${NETBIRD_MANAGEMENT_TAG}
+    image: netbirdio/management:latest
     restart: unless-stopped
     environment:
-      - JWT_SECRET=${JWT_SECRET}
+      - JWT_SECRET=525c6eacf89a639731b25c49c81dc60e76ee961f4db791c52c9ab01d1a85f3bf
     ports:
-      - "33073:33073"
       - "33071:33071"
+      - "33073:33073"
     volumes:
-      - management_/var/lib/netbird
+      - management_data:/var/lib/netbird
       - ./management.json:/etc/netbird/management.json:ro
 
   signal:
-    image: netbirdio/signal:${NETBIRD_SIGNAL_TAG}
+    image: netbirdio/signal:latest
     restart: unless-stopped
+    environment:
+      - WS_LISTEN_ADDR=0.0.0.0:10000
+      - TCP_LISTEN_ADDR=0.0.0.0:10000
     ports:
+      - "10000:10000/tcp"
       - "10000:10000/udp"
 
   relay:
-    image: netbirdio/relay:${NETBIRD_RELAY_TAG}
+    image: netbirdio/relay:latest
     restart: unless-stopped
     environment:
       - RELAY_ADDR=0.0.0.0:3478
       - RELAY_EXPOSED_IP=2.59.80.62
     ports:
       - "3478:3478/udp"
+      - "3478:3478/tcp"
 
   dashboard:
-    image: netbirdio/dashboard:${NETBIRD_DASHBOARD_TAG}
+    image: netbirdio/dashboard:latest
     restart: unless-stopped
     environment:
-      - NEXT_PUBLIC_MANAGEMENT_API_URL=${NETBIRD_MGMT_API_ENDPOINT}
-      - NEXT_PUBLIC_SIGNAL_API_URL=stacklink.stackroom.ru:10000
-      - NEXT_PUBLIC_RELAY_API_URL=stacklink.stackroom.ru:3478
-      - AUTH_AUTHORITY=${NETBIRD_AUTH_AUTHORITY}
-      - AUTH0_DOMAIN=${NETBIRD_AUTH_AUTHORITY}
-      - AUTH0_CLIENT_ID=${NETBIRD_AUTH_CLIENT_ID}
-      - AUTH0_CLIENT_SECRET=${NETBIRD_AUTH_CLIENT_SECRET}
-      - AUTH0_AUDIENCE=${NETBIRD_DASH_AUTH_AUDIENCE}
+      - NEXT_PUBLIC_MANAGEMENT_API_URL=http://2.59.80.62:33071
+      - NEXT_PUBLIC_SIGNAL_API_URL=ws://2.59.80.62:10000
+      - NEXT_PUBLIC_RELAY_API_URL=2.59.80.62:3478
     ports:
       - "3000:3000"
     depends_on:

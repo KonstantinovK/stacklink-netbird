@@ -2,17 +2,27 @@
   "Stuns": [
     {
       "Proto": "udp",
-      "URI": "stun://2.59.80.62:3478"
+      "URI": "stun:2.59.80.62:3478"
     }
   ],
+  "TURNConfig": {
+    "Turns": [
+      {
+        "Proto": "udp",
+        "URI": "turn:2.59.80.62:3478"
+      }
+    ],
+    "TimeBasedCredentials": false
+  },
   "Signal": {
-    "Proto": "http",
-    "URI": "http://2.59.80.62:10000"
+    "Proto": "ws",
+    "URI": "2.59.80.62:10000"
   },
   "Datadir": "/var/lib/netbird",
   "HttpConfig": {
-    "Address": "0.0.0.0:33073",
-    "AuthIssuer": "http://dashboard:3000",
-    "AuthAudience": "http://dashboard:3000"
+    "Address": ":33071",
+    "AuthAudience": "netbird-api",
+    "AuthIssuer": "http://2.59.80.62:33071",
+    "OIDCConfigEndpoint": "http://2.59.80.62:33071/.well-known/openid-configuration"
   }
 }
