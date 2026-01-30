@@ -13,7 +13,7 @@ services:
       - "33073:33073"
       - "33071:33071"
     volumes:
-      - management_/var/lib/netbird
+      - management_data:/var/lib/netbird
 
   signal:
     image: netbirdio/signal:latest
@@ -48,3 +48,4 @@ services:
 
 volumes:
   management_data:
+  
