@@ -26,6 +26,7 @@ services:
     restart: unless-stopped
     environment:
       - RELAY_ADDR=0.0.0.0:3478
+      - RELAY_EXPOSED_IP=${RELAY_EXPOSED_IP}
     ports:
       - "3478:3478/udp"
 
@@ -41,6 +42,7 @@ services:
       - AUTH0_CLIENT_ID=netbird-client
       - AUTH0_CLIENT_SECRET=change-me-in-production
       - AUTH0_AUDIENCE=http://dashboard:3000
+      - NETBIRD_MGMT_API_ENDPOINT=https://${HTTP_AUTHORITY}:33073
     ports:
       - "3000:3000"
     depends_on:
