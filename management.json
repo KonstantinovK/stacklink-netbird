@@ -1,1 +1,20 @@
-{}
+{
+  "Stuns": [
+    {
+      "Proto": "udp",
+      "URI": "stun:stun.netbird.io:3478"
+    }
+  ],
+  "Signal": {
+    "Proto": "ws",
+    "URI": "signal:10000"
+  },
+  "Datadir": "/var/lib/netbird",
+  "HttpConfig": {
+    "Address": ":33071",
+    "AuthAudience": "netbird-api",
+    "AuthIssuer": "http://management:33071",
+    "OIDCConfigEndpoint": "http://management:33071/.well-known/openid-configuration"
+  }
+}
+
