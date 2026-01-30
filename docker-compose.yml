@@ -7,6 +7,7 @@ services:
       - JWT_SECRET=525c6eacf89a639731b25c49c81dc60e76ee961f4db791c52c9ab01d1a85f3bf
     ports:
       - "33071:33071"
+      - "33073:33073"  # Добавим второй порт на всякий случай
     volumes:
       - management_data:/var/lib/netbird
       - ./management.json:/etc/netbird/management.json:ro
@@ -14,6 +15,9 @@ services:
   signal:
     image: netbirdio/signal:latest
     restart: unless-stopped
+    environment:
+      - WS_LISTEN_ADDR=0.0.0.0:10000
+      - TCP_LISTEN_ADDR=0.0.0.0:10000
     ports:
       - "10000:10000/tcp"
       - "10000:10000/udp"
