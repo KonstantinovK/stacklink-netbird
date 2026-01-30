@@ -4,7 +4,7 @@ services:
     image: netbirdio/management:latest
     restart: unless-stopped
     environment:
-      - JWT_SECRET=supersecret1234567890supersecret1234567890
+      - JWT_SECRET=525c6eacf89a639731b25c49c81dc60e76ee961f4db791c52c9ab01d1a85f3bf
       - HTTP_AUTHORITY=stacklink.stackroom.ru
       - IDP_HOST=http://dashboard:3000
       - IDP_MANAGER_API_KEY=auto-generated-on-first-run
@@ -13,7 +13,7 @@ services:
       - "33073:33073"
       - "33071:33071"
     volumes:
-      - management_data:/var/lib/netbird
+      - management_/var/lib/netbird
 
   signal:
     image: netbirdio/signal:latest
