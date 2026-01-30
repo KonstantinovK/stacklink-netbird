@@ -24,9 +24,7 @@ services:
   relay:
     image: netbirdio/relay:latest
     restart: unless-stopped
-    environment:
-      - RELAY_ADDR=0.0.0.0:3478
-      - RELAY_EXPOSED_IP=2.59.80.62
+    command: ["--port", "3478", "--exposed-ip", "2.59.80.62"]
     ports:
       - "3478:3478/udp"
 
@@ -42,7 +40,6 @@ services:
       - AUTH0_CLIENT_ID=netbird-client
       - AUTH0_CLIENT_SECRET=change-me-in-production
       - AUTH0_AUDIENCE=http://dashboard:3000
-      - NETBIRD_MGMT_API_ENDPOINT=https://stacklink.stackroom.ru:33073
     ports:
       - "3000:3000"
     depends_on:
@@ -50,3 +47,4 @@ services:
 
 volumes:
   management_data:
+  
