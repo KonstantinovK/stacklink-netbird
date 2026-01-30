@@ -5,15 +5,26 @@ services:
     restart: unless-stopped
     environment:
       - JWT_SECRET=525c6eacf89a639731b25c49c81dc60e76ee961f4db791c52c9ab01d1a85f3bf
+      # Используем переменные окружения вместо конфиг файла
+      - MANAGEMENT_CONFIG_DATADIR=/var/lib/netbird
+      - MANAGEMENT_CONFIG_STUNS_0_PROTO=udp
+      - MANAGEMENT_CONFIG_STUNS_0_URI=stun:stun.netbird.io:3478
+      - MANAGEMENT_CONFIG_SIGNAL_PROTO=ws
+      - MANAGEMENT_CONFIG_SIGNAL_URI=signal:10000
+      - MANAGEMENT_CONFIG_HTTP_CONFIG_ADDRESS=:33071
+      - MANAGEMENT_CONFIG_HTTP_CONFIG_AUTH_AUDIENCE=netbird-api
+      - MANAGEMENT_CONFIG_HTTP_CONFIG_AUTH_ISSUER=http://management:33071
     ports:
       - "33071:33071"
     volumes:
       - management_data:/var/lib/netbird
-    command: --disable-config-file --log-level debug
 
   signal:
     image: netbirdio/signal:latest
     restart: unless-stopped
+    environment:
+      - WS_LISTEN_ADDR=0.0.0.0:10000
+      - TCP_LISTEN_ADDR=0.0.0.0:10000
     ports:
       - "10000:10000/tcp"
       - "10000:10000/udp"
@@ -22,11 +33,11 @@ services:
     image: netbirdio/dashboard:latest
     restart: unless-stopped
     environment:
-      - NETBIRD_MGMT_API_ENDPOINT=http://localhost:33071
-      - NEXT_PUBLIC_MANAGEMENT_API_URL=http://localhost:33071
-      - NEXT_PUBLIC_SIGNAL_API_URL=ws://localhost:10000
-      - AUTH_AUTHORITY=http://localhost:33071
-      - AUTH0_DOMAIN=http://localhost:33071
+      - NETBIRD_MGMT_API_ENDPOINT=http://2.59.80.62:33071
+      - NEXT_PUBLIC_MANAGEMENT_API_URL=http://2.59.80.62:33071
+      - NEXT_PUBLIC_SIGNAL_API_URL=ws://2.59.80.62:10000
+      - AUTH_AUTHORITY=http://2.59.80.62:33071
+      - AUTH0_DOMAIN=http://2.59.80.62:33071
       - AUTH0_CLIENT_ID=netbird
       - AUTH0_CLIENT_SECRET=secret
       - AUTH0_AUDIENCE=netbird-api
