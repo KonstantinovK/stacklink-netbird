@@ -9,8 +9,7 @@ services:
       - "33071:33071"
     volumes:
       - management_data:/var/lib/netbird
-      - ./management.json:/etc/netbird/management.json:ro
-    command: --log-level debug
+    command: --disable-config-file --log-level debug
 
   signal:
     image: netbirdio/signal:latest
@@ -23,10 +22,15 @@ services:
     image: netbirdio/dashboard:latest
     restart: unless-stopped
     environment:
-      - NETBIRD_MGMT_API_ENDPOINT=http://2.59.80.62:33071
-      - NEXT_PUBLIC_MANAGEMENT_API_URL=http://2.59.80.62:33071
-      - NEXT_PUBLIC_SIGNAL_API_URL=ws://2.59.80.62:10000
-      - AUTH_AUTHORITY=http://2.59.80.62:33071
+      - NETBIRD_MGMT_API_ENDPOINT=http://localhost:33071
+      - NEXT_PUBLIC_MANAGEMENT_API_URL=http://localhost:33071
+      - NEXT_PUBLIC_SIGNAL_API_URL=ws://localhost:10000
+      - AUTH_AUTHORITY=http://localhost:33071
+      - AUTH0_DOMAIN=http://localhost:33071
+      - AUTH0_CLIENT_ID=netbird
+      - AUTH0_CLIENT_SECRET=secret
+      - AUTH0_AUDIENCE=netbird-api
+      - AUTH_CLIENT_ID=netbird
     ports:
       - "3000:3000"
     depends_on:
