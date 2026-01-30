@@ -5,6 +5,7 @@ services:
     restart: unless-stopped
     environment:
       - JWT_SECRET=525c6eacf89a639731b25c49c81dc60e76ee961f4db791c52c9ab01d1a85f3bf
+      # Указываем конфигурацию через переменные окружения
       - MANAGEMENT_CONFIG_DATADIR=/var/lib/netbird
       - MANAGEMENT_CONFIG_STUNS_0_PROTO=udp
       - MANAGEMENT_CONFIG_STUNS_0_URI=stun:2.59.80.62:3478
@@ -13,12 +14,12 @@ services:
       - MANAGEMENT_CONFIG_HTTP_AUTH_AUDIENCE=netbird-api
       - MANAGEMENT_CONFIG_HTTP_AUTH_ISSUER=http://management:33071
       - MANAGEMENT_CONFIG_OIDC_CONFIG_ENDPOINT=http://management:33071/.well-known/openid-configuration
+      # Отключаем обязательность файла конфигурации
+      - MANAGEMENT_CONFIG_DISABLE_CONFIG_FILE=true
     ports:
       - "33071:33071"
-      - "33073:33073"
     volumes:
       - management_data:/var/lib/netbird
-    # Убрал монтирование management.json, используем переменные окружения
 
   signal:
     image: netbirdio/signal:latest
@@ -37,6 +38,7 @@ services:
       - RELAY_ADDR=0.0.0.0:3478
       - RELAY_EXPOSED_IP=2.59.80.62
       - RELAY_PORT=3478
+      - RELAY_STUN_PORT=3478
     ports:
       - "3478:3478/udp"
       - "3478:3478/tcp"
@@ -45,19 +47,26 @@ services:
     image: netbirdio/dashboard:latest
     restart: unless-stopped
     environment:
+      # Критические переменные
+      - NETBIRD_MGMT_API_ENDPOINT=http://2.59.80.62:33071
       - NEXT_PUBLIC_MANAGEMENT_API_URL=http://2.59.80.62:33071
       - NEXT_PUBLIC_SIGNAL_API_URL=ws://2.59.80.62:10000
       - NEXT_PUBLIC_RELAY_API_URL=2.59.80.62:3478
+      # Auth переменные
       - AUTH_AUTHORITY=http://2.59.80.62:33071
       - AUTH0_DOMAIN=http://2.59.80.62:33071
       - AUTH0_CLIENT_ID=netbird-client-id
       - AUTH0_CLIENT_SECRET=netbird-client-secret
       - AUTH0_AUDIENCE=netbird-api
-      - NEXT_PUBLIC_USE_AUTH0=false  # Отключаем Auth0 для начала
+      # Отключаем сложную аутентификацию для начала
+      - NEXT_PUBLIC_USE_AUTH0=false
+      - NEXT_PUBLIC_AUTH_ENABLED=false
     ports:
       - "3000:3000"
     depends_on:
       - management
+      - signal
+      - relay
 
 volumes:
   management_data:
